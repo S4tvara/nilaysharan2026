@@ -3,18 +3,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export function generateStaticParams() {
-  const slugs = getAllSlugs();
-
-  return slugs.map((slug) => ({
-    slug,
-  }));
+  return getAllSlugs().map((slug) => ({ slug }));
 }
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+type Params = Promise<{ slug: string }>;
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params }: { params: Params }) {
   const { slug } = await params;
 
   const note = getNote(slug);

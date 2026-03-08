@@ -2,6 +2,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
@@ -13,6 +14,7 @@ type Node = {
   label?: string;
   x?: number;
   y?: number;
+  group?: string;
 };
 
 type Link = {
@@ -25,7 +27,16 @@ type GraphData = {
   links: Link[];
 };
 
+const themeColors: Record<string, string> = {
+  tech: "#38bdf8",
+  systems: "#a78bfa",
+  strategy: "#f472b6",
+  general: "#71717a",
+};
+
 export default function ZettelkastenGraph({ data }: { data: GraphData }) {
+  const router = useRouter();
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -55,6 +66,7 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
     data.links.forEach((link) => {
       const source =
         typeof link.source === "string" ? link.source : link.source.id;
+
       const target =
         typeof link.target === "string" ? link.target : link.target.id;
 
@@ -71,6 +83,9 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
   const isNeighbor = (a: string, b: string) =>
     neighborMap.current.get(a)?.has(b);
 
+  const resolveNodeId = (node: string | Node) =>
+    typeof node === "string" ? node : node.id;
+
   return (
     <div ref={containerRef} className="w-full h-full">
       {size.width > 0 && (
@@ -79,44 +94,100 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
           height={size.height}
           graphData={data}
           backgroundColor="#09090b"
+          nodeAutoColorBy="group"
+          cooldownTicks={120}
+          d3VelocityDecay={0.35}
           onNodeHover={(node) => setHoverNode(node as Node)}
-          onNodeClick={(node) => {
-            window.location.href = `/zettelkasten/${node.id}`;
-          }} 
-          linkColor={(link: any) => {
+          onNodeClick={(node: any) => {
+            router.push(
+              `/zettelkasten/${node.id.toLowerCase().replace(/\s+/g, "-")}`
+            );
+          }}
+          linkColor={(link) => {
+            const l = link as { source: Node; target: Node };
+
             if (!hoverNode) return "#3f3f46";
 
-            const s = link.source.id;
-            const t = link.target.id;
+            const s = resolveNodeId(l.source);
+            const t = resolveNodeId(l.target);
 
             return s === hoverNode.id || t === hoverNode.id
               ? "#e4e4e7"
               : "#27272a";
           }}
-          nodeCanvasObject={(node: any, ctx, scale) => {
-            const label = node.label || node.id;
+          onRenderFramePre={(ctx) => {
+            const groups: Record<string, Node[]> = {};
+
+            data.nodes.forEach((node) => {
+              if (!node.group) return;
+
+              if (!groups[node.group]) groups[node.group] = [];
+              groups[node.group].push(node);
+            });
+
+            Object.entries(groups).forEach(([group, nodes]) => {
+              const valid = nodes.filter((n) => n.x && n.y);
+              if (!valid.length) return;
+
+              const cx =
+                valid.reduce((sum, n) => sum + (n.x ?? 0), 0) / valid.length;
+
+              const cy =
+                valid.reduce((sum, n) => sum + (n.y ?? 0), 0) / valid.length;
+
+              const radius = Math.sqrt(valid.length) * 45;
+
+              const color = themeColors[group] ?? "#71717a";
+
+              const gradient = ctx.createRadialGradient(
+                cx,
+                cy,
+                radius * 0.2,
+                cx,
+                cy,
+                radius
+              );
+
+              gradient.addColorStop(0, `${color}22`);
+              gradient.addColorStop(1, "transparent");
+
+              ctx.beginPath();
+              ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+
+              ctx.fillStyle = gradient;
+              ctx.fill();
+            });
+          }}
+          nodeCanvasObject={(obj, ctx, scale) => {
+            const node = obj as Node;
+
+            const label = node.label ?? node.id;
+
+            const x = node.x ?? 0;
+            const y = node.y ?? 0;
 
             const active =
               hoverNode &&
               (node.id === hoverNode.id || isNeighbor(node.id, hoverNode.id));
 
-            const radius = active ? 4 : 2.5;
+            const radius = active ? 3.8 : 2.5;
 
             ctx.beginPath();
-            ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
 
-            ctx.fillStyle = active ? "#e4e4e7" : "#71717a";
+            ctx.fillStyle = active ? "#e4e4e7" : "#a1a1aa";
             ctx.shadowColor = active ? "#e4e4e7" : "transparent";
             ctx.shadowBlur = active ? 8 : 0;
 
             ctx.fill();
 
-            const fontSize = 12 / scale;
+            const fontSize = 11 / scale;
 
             ctx.font = `${fontSize}px Inter`;
-            ctx.fillStyle = "#e4e4e7";
 
-            ctx.fillText(label, node.x + 6, node.y + 3);
+            ctx.fillStyle = active ? "#e4e4e7" : "#71717a";
+
+            ctx.fillText(label, x + 6, y + fontSize / 3);
           }}
         />
       )}
