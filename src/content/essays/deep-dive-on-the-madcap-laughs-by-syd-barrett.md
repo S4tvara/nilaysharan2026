@@ -1,10 +1,10 @@
 ---
 title: The Madcap Laughs, An Analysis of Syd Barrett’s Musical Genius and Madness
 slug: deep-dive-on-the-madcap-laughs-by-syd-barrett
-date: 2021-01-01
+date: 2026-01-01
 description: The Madcap Laughs, A psychedelic journey into the mind of Syd Barrett, the founding member of Pink Floyd.
 banner: nilaysharan/blog/syd/banner
-tags: album,deep dive
+tags: [[albums]]
 ---
 
 In the vast and eclectic tapestry of psychedelic rock, few albums hold the enigmatic charm and raw vulnerability of *The Madcap Laughs*. Released in 1970, this solo debut from Syd Barrett, the founding member of Pink Floyd, is as much a piece of music as it is a window into the fragmented psyche of a tortured artist. With its unpolished edges, cryptic lyrics, and sporadic bursts of brilliance, *The Madcap Laughs* offers listeners a rare glimpse into the interplay between genius and madness.

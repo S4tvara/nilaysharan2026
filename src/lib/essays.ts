@@ -1,31 +1,21 @@
-import "server-only";
+import { getContent } from "./content-engine";
+import { essaySchema } from "./content-schemas";
 
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-
-const essaysDir = path.join(process.cwd(), "src/content/essays");
-
-export function getAllEssaySlugs() {
-  return fs
-    .readdirSync(essaysDir)
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => f.replace(/\.md$/, ""));
+export function getAllEssays() {
+  return getContent("essays", essaySchema);
 }
 
 export function getEssay(slug: string) {
-  const filePath = path.join(essaysDir, `${slug}.md`);
+  const essays = getContent("essays", essaySchema);
+  const essay = essays.find((e) => e.slug === slug);
 
-  const raw = fs.readFileSync(filePath, "utf8");
-  const { data, content } = matter(raw);
+  if (!essay) {
+    throw new Error(`Essay not found: ${slug}`);
+  }
 
-  return {
-    slug,
-    frontmatter: data,
-    content,
-  };
+  return essay;
 }
 
-export function getAllEssays() {
-  return getAllEssaySlugs().map(getEssay);
+export function getEssaySlugs() {
+  return getContent("essays", essaySchema).map((e) => e.slug);
 }

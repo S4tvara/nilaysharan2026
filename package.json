@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "clear-run": "rm -rf .next && pnpm dev",
     "start": "next start",
     "lint": "eslint"
   },
@@ -20,7 +21,8 @@
     "react-force-graph-2d": "^1.29.1",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

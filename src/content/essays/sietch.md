@@ -1,0 +1,87 @@
+---
+title: Sietch Vault
+slug: sietch
+date: 2025-03-15
+description: "A decentralized file system that allows you to securely sync encrypted data across machines in low or no-internet condition."
+banner: "nilaysharan/project/sietch/ssh6bhhcfbhmu8gqhotm"
+tags: [[projects]]
+github: "github.com/nilaysharan/sietch"
+---
+
+> ## Introduction
+
+I’ve long been unsettled by the fragility of our reliance on the **cloud.**
+In many parts of the world, connectivity is erratic, censorship is real, and surveillance never sleeps.
+Every time the internet falters or a service goes down, your data—and your trust—becomes hostage to infrastructure you don’t control.
+
+Out of that uneasy truth, Sietch was born. A system engineered to survive when everything else fails. 
+It syncs peer-to-peer, resists metadata leaks, and stays operable in blackout zones or disconnected regions. 
+Whether you’re in a remote village, under heavy surveillance, or simply distrustful of centralized services, Sietch gives you back control.
+
+I led the architecture and implementation of its core components:
+
+- **Encrypted chunking** and **deduplication**, so that overlapping content isn’t duplicated and bandwidth is used smartly
+
+- **Zero-trust design** ensuring keys never leave your control, metadata is minimized, and no central authority ever sees your data
+
+- Discovery and synchronization over local **networks**, **mesh**, or even **sneakernet** — so connections aren’t a prerequisite
+
+- A CLI-first, scriptable UX giving power users the flexibility to **automate**, **integrate**, and **inspect internals**
+
+In building Sietch, I wrestled with deep trade-offs between security and usability, designed for adversarial environments, 
+and modularized the system so advanced users can replace components (discovery, encryption, UI) easily
+
+If you care about **sovereignty**, **resilience**, and **protecting** your data in the worst of times, I invite you to explore Sietch: try it, critique it, and help evolve it.
+
+
+The website for Sietch, where you can find the documentation, installation, and deep-dive into Sietch architecture.
+<WebsiteCard url='https://sietch.nilaysharan.com' title='Visit Sietch Website' description='Docs, installation, and deep-dive into Sietch architecture.' />
+
+The Github repository for Sietch, where you can find the code, issues, and pull requests.
+<GithubCard repo='s4tvara/sietch' />
+
+
+> ## Technical Details
+
+Sietch creates self-contained encrypted vaults that can sync over LAN, sneakernet (USB drives), or weak WiFi networks. 
+It operates fully offline, using chunked data, encryption, and peer-to-peer protocols to ensure your files 
+are always protected.
+
+> ### Core Features 
+
+- **AES256/GPG/Chacha20 encryption** - Encryption is used to ensure the data is protected from unauthorized access.
+- **Chunked data** - Data is chunked into smaller pieces to reduce the size of the data and to make it easier to sync.
+- **Deduplication** - Deduplication is used to reduce the size of the data and to make it easier to sync.
+- **Sneakernet synchronization** - Special configuration provided to sync over USB drives or even sneakernet.
+- **P2P synchronization** - Synchronization is done using a p2p protocol to find other nodes in the network.
+- **Gossip Discovery** - Discovery is done using a gossip protocol to find other nodes in the network.
+- **CLI-first, scriptable UX** - The CLI is used to interact with the system and to automate the system.
+
+>### Tech Stack Used
+
+- **Golang** - Used to write the code for the project.
+- **P2P** - protocols inspired from librsync and librsync-lite.
+- **Github Actions** - Created a CI/CD pipeline to automatically verify the code, find out ai-assited contributions and build/publish the project.
+- **Homebrew** - Created a homebrew formula to host the project.
+
+
+>### Usage Examples 
+
+- Scaffold a vault - `sietch scaffold --template <template-name> --name <vault-name>`
+<Image src='/images/sietch_integration.png' alt='create-vault' width={1000} height={1000} />
+
+- Add files or directories to a vault - `sietch add <file-or-directory-path> --vault <vault-name>`
+<Image src='/images/sietch_add.png' alt='create-vault' width={1000} height={1000} />
+
+- List all files in a vault and sort them by size - `sietch ls --long --sort size`
+<Image src='/images/sietch_ls.png' alt='create-vault' width={1000} height={1000} />
+
+- Deduplication Status - `sietch dedup status`
+<Image src='/images/sietch_dedup.png' alt='create-vault' width={1000} height={1000} />
+
+- Get files from the vault - `sietch get <file-or-directory-path>`
+<Image src='/images/sietch_get.png' alt='create-vault' width={1000} height={1000} />
+
+
+For more examples, and a better technical deep-dive, please refer to the [documentation](https://sietch.nilaysharan.com/).
+

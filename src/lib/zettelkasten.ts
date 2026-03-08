@@ -1,8 +1,5 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-
-const contentDir = path.join(process.cwd(), "src/content/Zettelkasten");
+import { getContent } from "./content-engine";
+import { zettelSchema } from "./content-schemas";
 
 export type ZettelNode = {
   id: string;
@@ -22,32 +19,19 @@ export type ZettelGraph = {
   links: ZettelLink[];
 };
 
-type Frontmatter = {
-  title?: string;
-  links?: string[];
-  themes?: string[];
-  topics?: string[];
-};
-
 export function buildZettelkastenGraph(): ZettelGraph {
-  const files = fs.readdirSync(contentDir);
+
+  const items = getContent("zettelkasten", zettelSchema);
 
   const nodes: ZettelNode[] = [];
   const links: ZettelLink[] = [];
 
   const nodeSet = new Set<string>();
-  const frontmatters: Record<string, Frontmatter> = {};
+  const frontmatters: Record<string, typeof items[number]["frontmatter"]> = {};
 
-  files.forEach((file) => {
-    if (!file.endsWith(".md")) return;
-
-    const slug = file.replace(".md", "");
-    const filePath = path.join(contentDir, file);
-
-    const raw = fs.readFileSync(filePath, "utf-8");
-    const { data } = matter(raw);
-
-    const fm = data as Frontmatter;
+  items.forEach((item) => {
+    const slug = item.slug;
+    const fm = item.frontmatter;
 
     nodeSet.add(slug);
     frontmatters[slug] = fm;

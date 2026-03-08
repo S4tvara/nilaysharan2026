@@ -1,10 +1,10 @@
 ---
 title: 'Routing Protocol : The Invisible force that powers the interent'
 slug: routing-protocol-the-invisible-force-that-powers-the-internet
-publishedAt: '2021-12-31'
+date: '2021-12-31'
 description: 'An Introduction on Routing Protocol and how IP data packets are sent over the Internet.'
 banner: 'nilaysharan/blog/router_protocol/banner'
-tags: 'tech,network'
+tags: [[network]]
 ---
 
 ## What is Routing?

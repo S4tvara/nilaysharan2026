@@ -1,10 +1,10 @@
 ---
 title: 'Service Animal : An Emotional Musical Journey'
 slug: service-animal
-publishedAt: '2021-12-31'
+date: '2026-12-31'
 description: 'Service Animal" by Jamblu: A soul-stirring musical odyssey exploring self-love and human connections, embracing emotions from heartache to hope.'
 banner: 'nilaysharan/blog/service_animal/banner'
-tags: 'review,album'
+tags: [[albums]]
 ---
 
 ## Introduction

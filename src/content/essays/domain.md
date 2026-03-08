@@ -4,7 +4,7 @@ slug: building-a-domain-security-analysis-pipeline-in-go
 date: 2021-01-01
 description: Go excels at network-heavy, concurrent workloads—exactly what you need when querying DNS servers, RDAP endpoints, and passive DNS APIs for thousands of domains. Key advantages include
 banner: nilaysharan/blog/syd/banner
-tags: album,deep dive
+tags: [[network]]
 ---
 
 **Analyzing 2,000+ domains for security posture, ownership, and threat signals at scale**

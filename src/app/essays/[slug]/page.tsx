@@ -1,20 +1,24 @@
-import { getEssay, getAllEssaySlugs } from "@/lib/essays";
+import { getEssay, getEssaySlugs } from "@/lib/essays";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export function generateStaticParams() {
-  return getAllEssaySlugs().map((slug) => ({ slug }));
+  return getEssaySlugs().map((slug) => ({
+    slug,
+  }));
 }
 
-type Params = Promise<{ slug: string }>;
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-export default async function Page({ params }: { params: Params }) {
+export default async function Page({ params }: Props) {
   const { slug } = await params;
 
   const essay = getEssay(slug);
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16">
+    <main className="mx-auto max-w-3xl px-6 py-20">
       <h1 className="text-3xl font-semibold mb-10">
         {essay.frontmatter.title}
       </h1>

@@ -1,10 +1,10 @@
 ---
 title: 'Netmasking: A Band-Aid Solution for a Bleeding Internet'
 slug: netmasking-and-how-we-keep-shifting-problems-to-the-future
-publishedAt: '2021-12-31'
+date: '2026-12-31'
 description: 'A detailed explanation on netmask, IP4, IPV6, and how we keep shifting problems to the future.'
 banner: 'nilaysharan/blog/netmask/banner'
-tags: 'tech,network'
+tags: [[network]]
 ---
 
 The internet as we know it is constantly evolving, but its underlying infrastructure has its roots in technologies that were developed decades ago. One such technology is the netmask, an essential yet often misunderstood concept in the world of networking. Despite its importance, netmasking can be seen as a "Band-Aid solution" to a much larger problem — the exhaustion of IPv4 addresses, and the long-overdue transition to IPv6. In this blog, we'll explore the role of netmasking, the difference between IPv4 and IPv6, and how these technologies represent a temporary fix to an ever-growing problem.
