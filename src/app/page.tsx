@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div className="">
+    <div className="content">
       <header className="mb-10">
         <h1 className="font-serif">Nilay Sharan</h1>
         <p className="muted font-sans">
