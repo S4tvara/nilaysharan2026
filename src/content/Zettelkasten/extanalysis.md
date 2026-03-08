@@ -9,6 +9,8 @@ links: ["Sietch Vault", "octoguard"]
 
 importance: high
 status: evergreen
+
+date: 2026-01-13
 ---
 
 Features of ExtAnalysis :

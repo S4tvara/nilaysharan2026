@@ -9,6 +9,8 @@ links: ["distributed-systems"]
 
 importance: high
 status: evergreen
+
+date: 2026-02-12
 ---
 
 Sietch creates self-contained encrypted vaults that can sync over LAN, sneakernet (USB drives), or weak WiFi networks. It operates fully offline, using chunked data, encryption, and peer-to-peer protocols to ensure your files are always protected and available—even when the internet is not.
