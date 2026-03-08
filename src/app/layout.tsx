@@ -1,33 +1,49 @@
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Serif, JetBrains_Mono , UnifrakturCook } from "next/font/google";
+import localFont from "next/font/local";
 import "../style/globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: "../fonts/Inter/Inter-VariableFont_opsz,wght.ttf",
   variable: "--font-sans",
   display: "swap",
 });
 
-const plexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const plexSerif = localFont({
+  src: [
+    {
+      path: "../fonts/IBM_Plex_Serif/IBMPlexSerif-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/IBM_Plex_Serif/IBMPlexSerif-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../fonts/IBM_Plex_Serif/IBMPlexSerif-SemiBold.ttf",
+      weight: "600",
+      style: "normal",
+    },
+  ],
   variable: "--font-serif",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+const jetbrainsMono = localFont({
+  src: "../fonts/JetBrains_Mono/JetBrainsMono-VariableFont_wght.ttf",
   variable: "--font-mono",
   display: "swap",
 });
 
-const unifrakturCook = UnifrakturCook({
+const unifrakturCook = localFont({
+  src: "../fonts/UnifrakturCook/UnifrakturCook-Bold.ttf",
   weight: "700",
-  subsets: ["latin"],
-  display: "swap",
+  style: "normal",
   variable: "--font-blackletter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,7 +53,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal
+  modal,
 }: {
   children: React.ReactNode;
   modal?: React.ReactNode;
@@ -48,10 +64,10 @@ export default function RootLayout({
       className={`${inter.variable} ${plexSerif.variable} ${jetbrainsMono.variable} ${unifrakturCook.variable}`}
     >
       <body className="antialiased">
-        <Navbar/>
+        <Navbar />
         {children}
         {modal}
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

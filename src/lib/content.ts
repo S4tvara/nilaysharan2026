@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const contentDir = path.join(process.cwd(), "src/content/Zettelkasten");
+const contentDir = path.join(process.cwd(), "src/content/zettelkasten");
 
 export function getAllSlugs() {
   return fs.readdirSync(contentDir).map((file) => file.replace(".md", ""));
