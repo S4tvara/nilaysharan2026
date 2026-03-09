@@ -25,9 +25,9 @@ export default function Page() {
   const years = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
 
   return (
-    <main className="mx-auto max-w-4xl px-8 py-28">
-      <header className="mb-20">
-        <h1 className="text-4xl font-semibold tracking-tight mb-4">
+    <main className="mx-auto max-w-4xl py-10">
+      <header className="mb-5">
+        <h1 className="text-4xl font-semibold tracking-tight mb-4 font-blackletter">
           Archives
         </h1>
 

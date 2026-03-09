@@ -36,7 +36,6 @@ const themeColors: Record<string, string> = {
 
 export default function ZettelkastenGraph({ data }: { data: GraphData }) {
   const router = useRouter();
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -94,33 +93,35 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
           height={size.height}
           graphData={data}
           backgroundColor="#09090b"
-          nodeAutoColorBy="group"
-          cooldownTicks={120}
+          cooldownTicks={150}
           d3VelocityDecay={0.35}
+          linkWidth={1}
+          linkColor={(link) => {
+            const l = link as { source: Node; target: Node };
+
+            if (!hoverNode) return "rgba(161,161,170,0.12)";
+
+            const s = resolveNodeId(l.source);
+            const t = resolveNodeId(l.target);
+
+            if (s === hoverNode.id || t === hoverNode.id)
+              return "rgba(228,228,231,0.6)";
+
+            return "rgba(63,63,70,0.15)";
+          }}
           onNodeHover={(node) => setHoverNode(node as Node)}
           onNodeClick={(node: any) => {
             router.push(
               `/zettelkasten/${node.id.toLowerCase().replace(/\s+/g, "-")}`
             );
           }}
-          linkColor={(link) => {
-            const l = link as { source: Node; target: Node };
 
-            if (!hoverNode) return "#3f3f46";
-
-            const s = resolveNodeId(l.source);
-            const t = resolveNodeId(l.target);
-
-            return s === hoverNode.id || t === hoverNode.id
-              ? "#e4e4e7"
-              : "#27272a";
-          }}
+          /* CLUSTER HALOS */
           onRenderFramePre={(ctx) => {
             const groups: Record<string, Node[]> = {};
 
             data.nodes.forEach((node) => {
               if (!node.group) return;
-
               if (!groups[node.group]) groups[node.group] = [];
               groups[node.group].push(node);
             });
@@ -135,7 +136,7 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
               const cy =
                 valid.reduce((sum, n) => sum + (n.y ?? 0), 0) / valid.length;
 
-              const radius = Math.sqrt(valid.length) * 45;
+              const radius = Math.sqrt(valid.length) * 35 + 40;
 
               const color = themeColors[group] ?? "#71717a";
 
@@ -148,7 +149,7 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
                 radius
               );
 
-              gradient.addColorStop(0, `${color}22`);
+              gradient.addColorStop(0, `${color}14`);
               gradient.addColorStop(1, "transparent");
 
               ctx.beginPath();
@@ -158,6 +159,8 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
               ctx.fill();
             });
           }}
+
+          /* NODE RENDERING */
           nodeCanvasObject={(obj, ctx, scale) => {
             const node = obj as Node;
 
@@ -170,14 +173,21 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
               hoverNode &&
               (node.id === hoverNode.id || isNeighbor(node.id, hoverNode.id));
 
-            const radius = active ? 3.8 : 2.5;
+            const faded = hoverNode && !active;
+
+            const radius = active ? 4.5 : 2.5;
 
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, 2 * Math.PI);
 
-            ctx.fillStyle = active ? "#e4e4e7" : "#a1a1aa";
+            ctx.fillStyle = faded
+              ? "rgba(113,113,122,0.35)"
+              : active
+              ? "#e4e4e7"
+              : "#a1a1aa";
+
             ctx.shadowColor = active ? "#e4e4e7" : "transparent";
-            ctx.shadowBlur = active ? 8 : 0;
+            ctx.shadowBlur = active ? 10 : 0;
 
             ctx.fill();
 
@@ -185,9 +195,13 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
 
             ctx.font = `${fontSize}px Inter`;
 
-            ctx.fillStyle = active ? "#e4e4e7" : "#71717a";
+            ctx.fillStyle = faded
+              ? "rgba(113,113,122,0.5)"
+              : active
+              ? "#e4e4e7"
+              : "#71717a";
 
-            ctx.fillText(label, x + 6, y + fontSize / 3);
+            ctx.fillText(label, x + 7, y + fontSize / 3);
           }}
         />
       )}

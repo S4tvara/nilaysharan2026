@@ -26,7 +26,6 @@ export default function Page() {
 
   const tags = Object.keys(grouped);
 
-  /* distribute tags across columns */
   const columns: string[][] = [[], [], []];
 
   tags.forEach((tag, i) => {
@@ -34,48 +33,46 @@ export default function Page() {
   });
 
   return (
-    <main className="mx-auto max-w-7xl px-8 py-10">
+    <main className="mx-auto max-w-7xl px-8 py-12">
       {/* Header */}
-      <header className="max-w-2xl mb-20">
-        <h1 className="text-4xl font-semibold tracking-tight text-zinc-100 mb-4 font-blackletter">
+      <header className="max-w-2xl mb-24">
+        <h1 className="text-4xl font-semibold tracking-tight text-zinc-100 mb-5 font-blackletter">
           Essays
         </h1>
 
         <p className="text-zinc-400 text-[15px] leading-relaxed">
           {essays.length} ideas which took more than an evening to explore.
         </p>
-
-        <div className="mt-6 h-px w-24 bg-zinc-800" />
       </header>
 
       {/* Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-24">
         {columns.map((col, idx) => (
-          <div key={idx} className="space-y-20">
+          <div key={idx} className="space-y-24">
             {col.map((tag) => (
               <section key={tag}>
-                <h2 className="text-xs uppercase tracking-widest text-zinc-500 mb-10">
+                <h2 className="text-[11px] uppercase tracking-[0.25em] text-zinc-500 mb-12">
                   {tag}
                 </h2>
 
-                <div className="space-y-10">
+                <div className="space-y-12">
                   {grouped[tag].map((essay) => (
                     <article key={essay.slug}>
                       <Link
                         href={`/essays/${essay.slug}`}
-                        className="block text-lg font-medium leading-snug hover:underline"
+                        className="block text-lg font-medium leading-relaxed text-zinc-100 hover:underline"
                       >
                         {essay.frontmatter.title}
                       </Link>
 
                       {essay.frontmatter.description && (
-                        <p className="text-sm text-zinc-400 mt-2 leading-relaxed">
+                        <p className="text-[14px] text-zinc-400 mt-3 leading-relaxed">
                           {essay.frontmatter.description}
                         </p>
                       )}
 
                       {essay.frontmatter.date && (
-                        <p className="text-xs text-zinc-500 mt-3">
+                        <p className="text-[12px] text-zinc-500 mt-3">
                           {new Date(essay.frontmatter.date).toLocaleDateString(
                             "en-US",
                             {
