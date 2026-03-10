@@ -9,9 +9,9 @@ const container = {
     opacity: 1,
     transition: {
       staggerChildren: 0.12,
-      delayChildren: 0.15
-    }
-  }
+      delayChildren: 0.15,
+    },
+  },
 };
 
 const item = {
@@ -19,8 +19,8 @@ const item = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5 }
-  }
+    transition: { duration: 0.5 },
+  },
 };
 
 export default function Page() {
@@ -31,44 +31,40 @@ export default function Page() {
       animate="show"
       className="mx-auto max-w-2xl px-6 py-20 leading-relaxed text-zinc-300"
     >
-
       {/* Title */}
       <motion.h1
         variants={item}
         className="text-3xl font-blackletter text-zinc-100 mb-8"
       >
-        Nilay Nath Sharan
+        Satvara
       </motion.h1>
 
       {/* Intro */}
       <motion.p variants={item} className="mb-6">
-        This website is a personal knowledge system. It is a place where
-        ideas are captured as small notes, expanded into essays, and
-        occasionally turned into working systems.
+        This website is a trap to capture ideas, a place where thoughts can be
+        collected, explored, and connected over time. Instead of publishing
+        isolated posts, the goal is find commanility between different ideas and
+        build a network which grows and evolves with me.
       </motion.p>
 
       <motion.p variants={item} className="mb-6">
         Most ideas begin as fragments in the{" "}
         <Link
-          href="/zettelkasten"
+          href="/archive"
           className="text-zinc-100 hover:text-white transition-colors"
         >
-          Zettelkasten
+          archive
         </Link>
-        . These notes form a network of concepts — consensus, distributed
-        systems, coordination, and failure. Over time some of them grow
-        into longer pieces of writing.
+        . Some of which are developed further into{" "}
+        <Link href="/zettelkasten">zettelkasten</Link>. Which are then connected
+        together to form a web, and patterns begin to emerge. Certain themes and
+        clusters of ideas become apparent, and these often lead to deeper
+        exploration and synthesis.
       </motion.p>
 
       <motion.p variants={item} className="mb-6">
-        Essays explore these ideas more deeply. For example,{" "}
-        <Link
-          href="/essays/attention-is-a-weapon"
-          className="text-zinc-100 hover:text-white transition-colors"
-        >
-          Attention is a Weapon
-        </Link>{" "}
-        examines how technological systems compete for human attention.
+        <Link href="/essays">Essays</Link> explore these clusters of theme more
+        deeply.
       </motion.p>
 
       <motion.p variants={item} className="mb-10">
@@ -99,21 +95,40 @@ export default function Page() {
 
       <motion.ul variants={item} className="space-y-2 mb-10">
         <li>
-          <Link href="/essays" className="hover:text-zinc-100 transition-colors">
+          <Link
+            href="/essays"
+            className="hover:text-zinc-100 transition-colors"
+          >
             Essays
           </Link>{" "}
           — long-form explorations of ideas.
         </li>
 
         <li>
-          <Link href="/zettelkasten" className="hover:text-zinc-100 transition-colors">
+          <Link
+            href="/archive"
+            className="hover:text-zinc-100 transition-colors"
+          >
+            Archive
+          </Link>{" "}
+          — a blurb of ideas.
+        </li>
+
+        <li>
+          <Link
+            href="/zettelkasten"
+            className="hover:text-zinc-100 transition-colors"
+          >
             Zettelkasten
           </Link>{" "}
           — a network of connected notes.
         </li>
 
         <li>
-          <Link href="/projects" className="hover:text-zinc-100 transition-colors">
+          <Link
+            href="/projects"
+            className="hover:text-zinc-100 transition-colors"
+          >
             Projects
           </Link>{" "}
           — systems built while exploring ideas.
@@ -130,22 +145,30 @@ export default function Page() {
 
       <motion.ul variants={item} className="space-y-1">
         <li>
-          <Link href="/zettelkasten/consensus" className="hover:text-zinc-100 transition-colors">
+          <Link
+            href="/zettelkasten/consensus"
+            className="hover:text-zinc-100 transition-colors"
+          >
             Consensus
           </Link>
         </li>
         <li>
-          <Link href="/zettelkasten/fault-tolerance" className="hover:text-zinc-100 transition-colors">
+          <Link
+            href="/zettelkasten/fault-tolerance"
+            className="hover:text-zinc-100 transition-colors"
+          >
             Fault Tolerance
           </Link>
         </li>
         <li>
-          <Link href="/zettelkasten/network-coordination" className="hover:text-zinc-100 transition-colors">
+          <Link
+            href="/zettelkasten/network-coordination"
+            className="hover:text-zinc-100 transition-colors"
+          >
             Network Coordination
           </Link>
         </li>
       </motion.ul>
-
     </motion.main>
   );
 }

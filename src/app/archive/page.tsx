@@ -18,8 +18,8 @@ export default function Page() {
     list.sort(
       (a, b) =>
         new Date(b.frontmatter.date).getTime() -
-        new Date(a.frontmatter.date).getTime()
-    )
+        new Date(a.frontmatter.date).getTime(),
+    ),
   );
 
   const years = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
@@ -53,12 +53,12 @@ export default function Page() {
                       {
                         month: "short",
                         day: "numeric",
-                      }
+                      },
                     )}
                   </span>
 
                   <Link
-                    href={`/archives/${item.slug}`}
+                    href={`/archive/${item.slug}`}
                     className="text-zinc-200 hover:text-white"
                   >
                     {item.frontmatter.title}
