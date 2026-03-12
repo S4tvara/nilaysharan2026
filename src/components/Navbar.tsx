@@ -2,12 +2,14 @@ import Link from "next/link";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
 import Controls from "./Controls";
+import { getSearchIndex } from "@/lib/search-index";
 
 const Navbar = () => {
+  const searchItems = getSearchIndex();
+
   return (
     <nav className="w-full">
       <div className="flex items-center justify-between px-6 md:px-8 py-6 font-sans">
-        {/* Logo */}
         <Link
           href="/"
           className="font-blackletter text-2xl font-semibold tracking-[0.05em] text-zinc-100 hover:text-zinc-200 transition-colors"
@@ -15,16 +17,13 @@ const Navbar = () => {
           s4tvara
         </Link>
 
-        {/* Desktop nav */}
         <div className="hidden md:block">
           <DesktopNav />
         </div>
 
-        {/* Right controls */}
         <div className="flex items-center gap-6">
-          <Controls />
+          <Controls searchItems={searchItems} />
 
-          {/* Mobile nav */}
           <div className="md:hidden">
             <MobileNav />
           </div>

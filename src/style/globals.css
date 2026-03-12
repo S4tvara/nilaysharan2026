@@ -10,6 +10,7 @@
   --accent: #22c55e;       /* green-500 */
 
   --code-bg: #18181b;      /* zinc-900 */
+  --reader-font-scale: 1;
 }
 
 /* Tailwind theme bindings */
@@ -33,7 +34,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: calc(18px * var(--reader-font-scale));
   line-height: 1.7;
   margin: 0;
 }
@@ -121,4 +122,11 @@ pre {
 
 .muted {
   color: var(--muted);
+}
+html.night-shift {
+  --background: #020617;
+  --foreground: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --code-bg: #0f172a;
 }
