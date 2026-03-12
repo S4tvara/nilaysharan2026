@@ -46,9 +46,42 @@ const unifrakturCook = localFont({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
+
 export const metadata: Metadata = {
-  title: "Nilay Sharan",
-  description: "Notes on systems, technology, and strategy",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Nilay Sharan",
+    template: "%s | Nilay Sharan",
+  },
+  description: "Notes on systems, technology, and strategy.",
+  keywords: [
+    "Nilay Sharan",
+    "systems",
+    "technology",
+    "strategy",
+    "essays",
+    "zettelkasten",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "Nilay Sharan",
+    description: "Notes on systems, technology, and strategy.",
+    siteName: "Nilay Sharan",
+  },
+  twitter: {
+    card: "summary",
+    title: "Nilay Sharan",
+    description: "Notes on systems, technology, and strategy.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
