@@ -3,12 +3,20 @@
 import { cn } from "@/lib/utils";
 
 type Props = {
+  nodes?: Array<{ id: string; label?: string }>;
   themes?: string[];
   topics?: string[];
   activeFilter?: string | null;
   onFilter?: (value: string | null, type: "theme" | "topic") => void;
   themeCounts?: Record<string, number>;
   topicCounts?: Record<string, number>;
+  pathSource?: string | null;
+  pathTarget?: string | null;
+  path?: string[];
+  onSourceChange?: (value: string | null) => void;
+  onTargetChange?: (value: string | null) => void;
+  onClearPath?: () => void;
+  onSurprisePath?: () => void;
 };
 
 const dummyThemes = ["Systems", "Strategy", "Tech", "Infra", "Security", "AI"];
@@ -22,12 +30,20 @@ const dummyTopics = [
 ];
 
 export default function ZettelSidebar({
+  nodes = [],
   themes = [],
   topics = [],
   activeFilter = null,
   onFilter,
   themeCounts = {},
   topicCounts = {},
+  pathSource = null,
+  pathTarget = null,
+  path = [],
+  onSourceChange,
+  onTargetChange,
+  onClearPath,
+  onSurprisePath,
 }: Props) {
   const themeList = themes.length ? themes : dummyThemes;
   const topicList = topics.length ? topics : dummyTopics;
@@ -133,6 +149,62 @@ export default function ZettelSidebar({
             Octoguard
           </button>
         </div>
+      </div>
+
+      <div className="px-5 py-3 border-t border-zinc-800/40">
+        <p className="text-[9px] uppercase tracking-widest text-zinc-500 mb-2">
+          Warp Path
+        </p>
+
+        <div className="space-y-2">
+          <select
+            value={pathSource ?? ""}
+            onChange={(e) => onSourceChange?.(e.target.value || null)}
+            className="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-xs text-zinc-300"
+          >
+            <option value="">From note...</option>
+            {nodes.map((node) => (
+              <option key={`source-${node.id}`} value={node.id}>
+                {node.label ?? node.id}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={pathTarget ?? ""}
+            onChange={(e) => onTargetChange?.(e.target.value || null)}
+            className="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-xs text-zinc-300"
+          >
+            <option value="">To note...</option>
+            {nodes.map((node) => (
+              <option key={`target-${node.id}`} value={node.id}>
+                {node.label ?? node.id}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <button
+            onClick={onSurprisePath}
+            className="text-[11px] px-2 py-1 rounded bg-fuchsia-900/40 text-fuchsia-200 hover:bg-fuchsia-800/50"
+          >
+            Blow my mind
+          </button>
+
+          <button
+            onClick={onClearPath}
+            className="text-[11px] px-2 py-1 rounded bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+          >
+            Clear
+          </button>
+        </div>
+
+        <p className="mt-2 text-[11px] text-zinc-500">
+          {path.length > 1
+            ? `${path.length - 1} jumps · ${path.join(" → ")}`
+            : "Pick two notes to reveal shortest thought bridge."}
+        </p>
       </div>
     </aside>
   );

@@ -3,7 +3,7 @@
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
   ssr: false,
@@ -34,7 +34,13 @@ const themeColors: Record<string, string> = {
   general: "#71717a",
 };
 
-export default function ZettelkastenGraph({ data }: { data: GraphData }) {
+export default function ZettelkastenGraph({
+  data,
+  highlightedPath = [],
+}: {
+  data: GraphData;
+  highlightedPath?: string[];
+}) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -85,6 +91,25 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
   const resolveNodeId = (node: string | Node) =>
     typeof node === "string" ? node : node.id;
 
+  const pathNodeSet = useMemo(
+    () => new Set(highlightedPath),
+    [highlightedPath]
+  );
+
+  const pathEdgeSet = useMemo(() => {
+    const edgeSet = new Set<string>();
+
+    for (let i = 0; i < highlightedPath.length - 1; i += 1) {
+      const a = highlightedPath[i];
+      const b = highlightedPath[i + 1];
+
+      edgeSet.add(`${a}::${b}`);
+      edgeSet.add(`${b}::${a}`);
+    }
+
+    return edgeSet;
+  }, [highlightedPath]);
+
   return (
     <div ref={containerRef} className="w-full h-full">
       {size.width > 0 && (
@@ -95,14 +120,22 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
           backgroundColor="#09090b"
           cooldownTicks={150}
           d3VelocityDecay={0.35}
-          linkWidth={1}
+          linkWidth={(link) => {
+            const l = link as { source: Node; target: Node };
+            const s = resolveNodeId(l.source);
+            const t = resolveNodeId(l.target);
+
+            return pathEdgeSet.has(`${s}::${t}`) ? 2.5 : 1;
+          }}
           linkColor={(link) => {
             const l = link as { source: Node; target: Node };
 
-            if (!hoverNode) return "rgba(161,161,170,0.12)";
-
             const s = resolveNodeId(l.source);
             const t = resolveNodeId(l.target);
+
+            if (pathEdgeSet.has(`${s}::${t}`)) return "rgba(244,114,182,0.95)";
+
+            if (!hoverNode) return "rgba(161,161,170,0.12)";
 
             if (s === hoverNode.id || t === hoverNode.id)
               return "rgba(228,228,231,0.6)";
@@ -115,8 +148,6 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
               `/zettelkasten/${node.id.toLowerCase().replace(/\s+/g, "-")}`
             );
           }}
-
-          /* CLUSTER HALOS */
           onRenderFramePre={(ctx) => {
             const groups: Record<string, Node[]> = {};
 
@@ -159,8 +190,6 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
               ctx.fill();
             });
           }}
-
-          /* NODE RENDERING */
           nodeCanvasObject={(obj, ctx, scale) => {
             const node = obj as Node;
 
@@ -169,25 +198,30 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
             const x = node.x ?? 0;
             const y = node.y ?? 0;
 
+            const isOnPath = pathNodeSet.has(node.id);
+
             const active =
-              hoverNode &&
-              (node.id === hoverNode.id || isNeighbor(node.id, hoverNode.id));
+              isOnPath ||
+              (hoverNode &&
+                (node.id === hoverNode.id || isNeighbor(node.id, hoverNode.id)));
 
-            const faded = hoverNode && !active;
+            const faded = hoverNode && !active && !isOnPath;
 
-            const radius = active ? 4.5 : 2.5;
+            const radius = isOnPath ? 5.5 : active ? 4.5 : 2.5;
 
             ctx.beginPath();
             ctx.arc(x, y, radius, 0, 2 * Math.PI);
 
-            ctx.fillStyle = faded
+            ctx.fillStyle = isOnPath
+              ? "#f472b6"
+              : faded
               ? "rgba(113,113,122,0.35)"
               : active
               ? "#e4e4e7"
               : "#a1a1aa";
 
-            ctx.shadowColor = active ? "#e4e4e7" : "transparent";
-            ctx.shadowBlur = active ? 10 : 0;
+            ctx.shadowColor = isOnPath ? "#f472b6" : active ? "#e4e4e7" : "transparent";
+            ctx.shadowBlur = isOnPath ? 15 : active ? 10 : 0;
 
             ctx.fill();
 
@@ -195,7 +229,9 @@ export default function ZettelkastenGraph({ data }: { data: GraphData }) {
 
             ctx.font = `${fontSize}px Inter`;
 
-            ctx.fillStyle = faded
+            ctx.fillStyle = isOnPath
+              ? "#f9a8d4"
+              : faded
               ? "rgba(113,113,122,0.5)"
               : active
               ? "#e4e4e7"
