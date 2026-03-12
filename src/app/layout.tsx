@@ -96,7 +96,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${plexSerif.variable} ${jetbrainsMono.variable} ${unifrakturCook.variable}`}
     >
-      <body className="antialiased">
+      <body id="top" className="antialiased">
         <Navbar />
         {children}
         {modal}

@@ -1,0 +1,26 @@
+---
+title: Vault Guard
+type: project
+
+themes: ["systems"]
+topics: ["projects", "incident-response"]
+
+links: ["vault-probe", "extanalysis"]
+
+importance: high
+status: evergreen
+
+date: 2026-03-12
+---
+
+Vault Guard maps a practical architecture for operators who need speed, auditability, and low maintenance overhead.
+It stays close to terminal workflows and keeps the moving parts small.
+
+Why this note exists:
+I want a blueprint that remains useful even when connectivity drops.
+The system should keep trust boundaries explicit at every step.
+
+Current build direction:
+Structured logs tuned for incident debugging
+Modular adapters so integrations stay optional
+Queue-aware scheduling for burst traffic
