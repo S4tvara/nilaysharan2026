@@ -16,6 +16,10 @@ A personal Next.js 16 site for publishing essays, archive entries, and a connect
 - `src/lib/*`: content loading, parsing, and schema utilities
 - `src/content/*`: markdown sources for essays, archives, and zettels
 
+## Mind-blowing feature: Command Palette
+
+Use `⌘/Ctrl + K` anywhere on the site to open a fast command palette that can jump across essays, archive entries, and zettelkasten notes. It also includes persistent reader controls for text scaling and night-shift contrast mode.
+
 ## Local development
 
 ```bash
