@@ -17,6 +17,7 @@ type Props = {
   onTargetChange?: (value: string | null) => void;
   onClearPath?: () => void;
   onSurprisePath?: () => void;
+  className?: string;
 };
 
 const dummyThemes = ["Systems", "Strategy", "Tech", "Infra", "Security", "AI"];
@@ -44,6 +45,7 @@ export default function ZettelSidebar({
   onTargetChange,
   onClearPath,
   onSurprisePath,
+  className,
 }: Props) {
   const themeList = themes.length ? themes : dummyThemes;
   const topicList = topics.length ? topics : dummyTopics;
@@ -56,7 +58,8 @@ export default function ZettelSidebar({
         "[&::-webkit-scrollbar]:w-1.5",
         "[&::-webkit-scrollbar-thumb]:bg-zinc-800/50",
         "[&::-webkit-scrollbar-track]:bg-zinc-950",
-        "scrollbar-thin scrollbar-thumb-zinc-800/40 scrollbar-track-zinc-950"
+        "scrollbar-thin scrollbar-thumb-zinc-800/40 scrollbar-track-zinc-950",
+        className
       )}
     >
       {/* Header */}
@@ -72,7 +75,7 @@ export default function ZettelSidebar({
           Themes
         </p>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {themeList.map((t) => {
             const isActive = activeFilter === t;
             const count = themeCounts[t] ?? 0;
@@ -106,7 +109,7 @@ export default function ZettelSidebar({
           Topics
         </p>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {topicList.map((t) => {
             const isActive = activeFilter === t;
             const count = topicCounts[t] ?? 0;

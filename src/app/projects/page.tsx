@@ -114,7 +114,7 @@ export default function Page() {
               {idea.projects.map((project) => (
                 <div
                   key={project.name}
-                  className="grid grid-cols-[220px_1fr] gap-x-12"
+                  className="grid grid-cols-1 gap-y-4 md:grid-cols-[220px_1fr] md:gap-x-12"
                 >
                   {/* LEFT COLUMN */}
                   <div className="text-sm">
