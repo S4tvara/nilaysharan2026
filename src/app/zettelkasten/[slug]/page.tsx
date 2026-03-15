@@ -1,6 +1,6 @@
 import { getNote, getAllSlugs } from "@/lib/content";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import HighlightLayer from "@/components/HighlightLayer";
+import { extractHeadings } from "@/lib/markdown";
 
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -12,16 +12,14 @@ export default async function Page({ params }: { params: Params }) {
   const { slug } = await params;
 
   const note = getNote(slug);
+  const headings = extractHeadings(note.content);
 
   return (
-    <main className="content">
-      <h1>{note.frontmatter.title ?? slug}</h1>
-
-      <article className="prose prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {note.content}
-        </ReactMarkdown>
-      </article>
-    </main>
+    <HighlightLayer
+      slug={note.slug}
+      content={note.content}
+      title={note.frontmatter.title ?? slug}
+      headings={headings}
+    />
   );
 }

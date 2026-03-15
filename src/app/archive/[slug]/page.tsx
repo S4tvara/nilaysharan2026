@@ -1,6 +1,6 @@
 import { getArchive, getArchiveSlugs } from "@/lib/archives";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import HighlightLayer from "@/components/HighlightLayer";
+import { extractHeadings } from "@/lib/markdown";
 
 export function generateStaticParams() {
   return getArchiveSlugs().map((slug) => ({
@@ -16,22 +16,18 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
 
   const archive = getArchive(slug);
+  const headings = extractHeadings(archive.content);
 
   if (!archive) {
     return <div>Not found</div>;
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-20">
-      <h1 className="text-3xl font-semibold mb-10">
-        {archive.frontmatter.title}
-      </h1>
-
-      <article className="prose prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {archive.content}
-        </ReactMarkdown>
-      </article>
-    </main>
+    <HighlightLayer
+      slug={archive.slug}
+      content={archive.content}
+      title={archive.frontmatter.title}
+      headings={headings}
+    />
   );
 }

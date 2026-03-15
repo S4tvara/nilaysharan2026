@@ -2,10 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import HighlightLayer from "@/components/HighlightLayer";
+import { extractHeadings } from "@/lib/markdown";
 
 type Note = {
+  slug: string;
   frontmatter: { title?: string };
   content: string;
 };
@@ -13,6 +14,7 @@ type Note = {
 export default function ModalClient({ note }: { note: Note }) {
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null);
+  const headings = extractHeadings(note.content);
 
   /* ESC close */
   useEffect(() => {
@@ -42,14 +44,11 @@ export default function ModalClient({ note }: { note: Note }) {
   return (
     <div
       onMouseDown={handleBackdropClick}
-      className="fixed inset-0 z-50 flex items-center justify-center 
-      bg-black/60 backdrop-blur-sm p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6"
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-3xl max-h-[88vh]
-        bg-zinc-950 border border-zinc-800 rounded-lg
-        flex flex-col shadow-2xl"
+        className="relative w-full max-w-3xl max-h-[88vh] bg-zinc-950 border border-zinc-800 rounded-lg flex flex-col shadow-2xl"
       >
         {/* Title */}
         <div className="px-6 pt-6 pb-4 border-b border-zinc-800">
@@ -68,20 +67,15 @@ export default function ModalClient({ note }: { note: Note }) {
         </div>
 
         {/* Content */}
-        <div
-          className="
-          overflow-y-auto px-6 py-6
-          [&::-webkit-scrollbar]:w-1.5
-          [&::-webkit-scrollbar-thumb]:bg-zinc-700/50
-          [&::-webkit-scrollbar-track]:bg-transparent
-          scrollbar-thin scrollbar-thumb-zinc-700/50
-        "
-        >
-          <article className="prose prose-invert prose-zinc max-w-[70ch] mx-auto">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {note.content}
-            </ReactMarkdown>
-          </article>
+        <div className="overflow-y-auto px-3 py-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-zinc-700/50 [&::-webkit-scrollbar-track]:bg-transparent scrollbar-thin scrollbar-thumb-zinc-700/50">
+          <HighlightLayer
+            slug={note.slug}
+            content={note.content}
+            title={note.frontmatter.title}
+            headings={headings}
+            showToc={false}
+            className="max-w-none px-2 py-0"
+          />
         </div>
       </div>
     </div>

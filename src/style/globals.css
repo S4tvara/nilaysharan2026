@@ -110,6 +110,138 @@ pre {
   overflow-x: auto;
 }
 
+/* Markdown enhancements */
+
+.prose h1 .anchor-link,
+.prose h2 .anchor-link,
+.prose h3 .anchor-link,
+.prose h4 .anchor-link {
+  margin-left: 0.35rem;
+  opacity: 0;
+  color: #a1a1aa;
+  text-decoration: none;
+  font-weight: 400;
+  transition: opacity 0.2s ease;
+}
+
+.prose h1:hover .anchor-link,
+.prose h2:hover .anchor-link,
+.prose h3:hover .anchor-link,
+.prose h4:hover .anchor-link,
+.prose h1:focus-within .anchor-link,
+.prose h2:focus-within .anchor-link,
+.prose h3:focus-within .anchor-link,
+.prose h4:focus-within .anchor-link {
+  opacity: 1;
+}
+
+/* Prism-ish dark theme */
+pre[class*=\"language-\"] {
+  background: #0f0f13;
+  border: 1px solid #27272a;
+}
+
+code[class*=\"language-\"],
+pre[class*=\"language-\"] {
+  color: #e4e4e7;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #71717a;
+}
+
+.token.punctuation {
+  color: #a1a1aa;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #f472b6;
+}
+
+.token.boolean,
+.token.number {
+  color: #f59e0b;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #4ade80;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.token.variable {
+  color: #93c5fd;
+}
+
+.token.atrule,
+.token.keyword {
+  color: #a78bfa;
+}
+
+.token.function,
+.token.class-name {
+  color: #38bdf8;
+}
+
+.token.regex,
+.token.important {
+  color: #fb7185;
+}
+
+.token.important,
+.token.bold {
+  font-weight: 700;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+/* Highlights */
+.highlight-block {
+  background: linear-gradient(90deg, rgba(74, 222, 128, 0.08), rgba(52, 211, 153, 0.14));
+  border-radius: 6px;
+  padding: 2px 4px;
+  position: relative;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.highlight-block::after {
+  content: "✦";
+  position: absolute;
+  right: 6px;
+  top: 4px;
+  font-size: 11px;
+  color: rgba(52, 211, 153, 0.9);
+}
+
+.highlight-block:hover {
+  box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.25);
+}
+
+.highlight-flash {
+  animation: flash-bg 1.2s ease;
+}
+
+@keyframes flash-bg {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
+  50% { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
 /* Layout container for readable text width */
 
 .content {
