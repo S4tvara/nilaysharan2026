@@ -7,13 +7,13 @@ const container = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 }
-  }
+    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+  },
 };
 
 const item = {
   hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45 } }
+  show: { opacity: 1, y: 0, transition: { duration: 0.45 } },
 };
 
 export default function Page() {
@@ -32,52 +32,10 @@ export default function Page() {
       </motion.h1>
 
       <motion.p variants={item} className="mb-6">
-        This website is a personal knowledge system. It exists to collect,
-        explore, and connect ideas over time. Instead of publishing isolated
-        posts, the goal is to build a map of thinking that grows gradually.
-      </motion.p>
-
-      <motion.p variants={item} className="mb-6">
-        Most ideas begin as small notes in the{" "}
-        <Link
-          href="/zettelkasten"
-          className="text-zinc-100 hover:text-white transition-colors"
-        >
-          Zettelkasten
-        </Link>
-        . These notes capture individual concepts, references, or questions.
-        Over time they become connected to other notes, forming a network of
-        related ideas.
-      </motion.p>
-
-      <motion.p variants={item} className="mb-6">
-        Some of these notes eventually grow into longer pieces of writing.
-        The{" "}
-        <Link
-          href="/essays"
-          className="text-zinc-100 hover:text-white transition-colors"
-        >
-          essays
-        </Link>{" "}
-        section contains more structured explorations of ideas that have
-        developed enough to stand on their own.
-      </motion.p>
-
-      <motion.p variants={item} className="mb-6">
-        Occasionally ideas turn into working systems. The{" "}
-        <Link
-          href="/projects"
-          className="text-zinc-100 hover:text-white transition-colors"
-        >
-          projects
-        </Link>{" "}
-        section documents software and experiments built while exploring these
-        concepts.
-      </motion.p>
-
-      <motion.p variants={item} className="mb-10">
-        The site therefore has three layers: notes, writing, and systems.
-        Together they form a record of how ideas evolve over time.
+        Memories are fleeting, and so are ideas. The events and thoughts that
+        shape our lives often fade into the haze of time. This project is an
+        attempt to capture those fragments before they disappear, a place to
+        record ideas, reflect on them, and let them evolve.
       </motion.p>
 
       <motion.h2
@@ -88,14 +46,27 @@ export default function Page() {
       </motion.h2>
 
       <motion.p variants={item} className="mb-6">
-        I’m Nilay Sharan, an engineer interested in distributed systems,
-        technology, and the structure of complex ideas. This site is where I
-        think in public — recording questions, experiments, and fragments of
-        understanding as they develop.
+        I&apos;m in my early twenties and have worked, at different points,
+        across tech, writing, finance, and a few areas that are better left
+        undisclosed.
+      </motion.p>
+
+      <motion.p variants={item} className="mb-6">
+        The idea for this project came from a quiet street across the railway
+        tracks. It was so deserted that dust had settled over the road. A broken
+        lamp flickered intermittently, briefly illuminating the drifting
+        particles in the air. It felt like a place forgotten by time.
+      </motion.p>
+
+      <motion.p variants={item} className="mb-6">
+        That image stayed with me. It reminded me how easily memories fade and
+        how much of a person&apos;s thinking disappears if it is never written
+        down. This space exists to prevent that, a place to capture thoughts
+        before they vanish.
       </motion.p>
 
       <motion.p variants={item}>
-        If you’re interested in the ideas themselves, start with the{" "}
+        If you&apos;re interested in the ideas themselves, start with the{" "}
         <Link
           href="/zettelkasten"
           className="text-zinc-100 hover:text-white transition-colors"

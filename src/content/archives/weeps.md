@@ -16,7 +16,7 @@ and then swear it was someone else
 who drove the nails.
 
 Prayer born from guilt is bargaining.
-Not for the end of sin—
+Not for the end of sin
 only for the silence of its echo
 inside your skull.
 

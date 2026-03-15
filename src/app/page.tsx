@@ -58,11 +58,7 @@ export default function Page() {
         . Some of which are developed further into{" "}
         <Link href="/zettelkasten">zettelkasten</Link>. Which are then connected
         together to form a web, and patterns begin to emerge. Certain themes and
-        clusters of ideas become apparent, and these often lead to deeper
-        exploration and synthesis.
-      </motion.p>
-
-      <motion.p variants={item} className="mb-6">
+        clusters of ideas become apparent, and{" "}
         <Link href="/essays">Essays</Link> explore these clusters of theme more
         deeply.
       </motion.p>
