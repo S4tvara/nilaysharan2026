@@ -1,6 +1,6 @@
 ---
 title: Satvara
-date: 2026-03-15
+date: 2026-03-20
 ---
 
 In Sanskrit there is a word _satvara_.  
