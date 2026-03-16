@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllEssays } from "@/lib/essays";
+import EssayDiscoveryLab from "@/components/EssayDiscoveryLab";
 
 type Essay = ReturnType<typeof getAllEssays>[number];
 
@@ -26,6 +27,15 @@ export default function Page() {
 
   const tags = Object.keys(grouped);
 
+  const discoveryPayload = essays.map((essay) => ({
+    slug: essay.slug,
+    title: essay.frontmatter.title,
+    description: essay.frontmatter.description,
+    date: essay.frontmatter.date,
+    tags: (essay.frontmatter.tags ?? ["general"]) as string[],
+    readMinutes: Math.max(3, Math.ceil(essay.content.split(/\s+/).filter(Boolean).length / 210)),
+  }));
+
   const columns: string[][] = [[], [], []];
 
   tags.forEach((tag, i) => {
@@ -44,6 +54,8 @@ export default function Page() {
           {essays.length} ideas which took more than an evening to explore.
         </p>
       </header>
+
+      <EssayDiscoveryLab essays={discoveryPayload} />
 
       {/* Columns */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-24">
