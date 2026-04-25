@@ -51,32 +51,28 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Nilay Sharan",
-    template: "%s | Nilay Sharan",
+    default: "s4tvara",
+    template: "%s | s4tvara",
   },
-  description: "Notes on systems, technology, and strategy.",
-  keywords: [
-    "Nilay Sharan",
-    "systems",
-    "technology",
-    "strategy",
-    "essays",
-    "zettelkasten",
-  ],
+  description: "Essays and recommendations.",
+  keywords: ["s4tvara", "essays", "recommendations"],
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
   },
   openGraph: {
     type: "website",
     url: "/",
-    title: "Nilay Sharan",
-    description: "Notes on systems, technology, and strategy.",
-    siteName: "Nilay Sharan",
+    title: "s4tvara",
+    description: "Essays and recommendations.",
+    siteName: "s4tvara",
   },
   twitter: {
-    card: "summary",
-    title: "Nilay Sharan",
-    description: "Notes on systems, technology, and strategy.",
+    card: "summary_large_image",
+    title: "s4tvara",
+    description: "Essays and recommendations.",
   },
   robots: {
     index: true,

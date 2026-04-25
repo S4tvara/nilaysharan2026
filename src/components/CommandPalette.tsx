@@ -10,8 +10,6 @@ type CommandPaletteProps = {
 
 const kindStyles: Record<SearchItem["kind"], string> = {
   essay: "text-emerald-300 border-emerald-500/30",
-  archive: "text-sky-300 border-sky-500/30",
-  zettel: "text-fuchsia-300 border-fuchsia-500/30"
 };
 
 const CommandPalette = ({ items }: CommandPaletteProps) => {
@@ -73,14 +71,14 @@ const CommandPalette = ({ items }: CommandPaletteProps) => {
                 autoFocus
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Teleport through essays, archives, and zettels..."
+                placeholder="Search essays..."
                 className="w-full bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
               />
             </div>
 
             <ul className="max-h-[60vh] overflow-y-auto p-3">
               {filtered.length === 0 ? (
-                <li className="px-3 py-6 text-center text-sm text-zinc-500">No matching idea found.</li>
+                <li className="px-3 py-6 text-center text-sm text-zinc-500">No matching essay found.</li>
               ) : (
                 filtered.map((item) => (
                   <li key={item.id}>

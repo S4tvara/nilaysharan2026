@@ -1,16 +1,13 @@
 import "server-only";
 
 import { getAllEssays } from "@/lib/essays";
-import { getAllArchives } from "@/lib/archives";
-import { getContent } from "@/lib/content-engine";
-import { zettelSchema } from "@/lib/content-schemas";
 
 export type SearchItem = {
   id: string;
   title: string;
   description: string;
   href: string;
-  kind: "essay" | "archive" | "zettel";
+  kind: "essay";
   tags: string[];
 };
 
@@ -26,32 +23,12 @@ function toExcerpt(content: string): string {
 }
 
 export function getSearchIndex(): SearchItem[] {
-  const essays = getAllEssays().map((essay) => ({
+  return getAllEssays().map((essay) => ({
     id: `essay:${essay.slug}`,
     title: essay.frontmatter.title,
     description: essay.frontmatter.description ?? toExcerpt(essay.content),
     href: `/essays/${essay.slug}`,
     kind: "essay" as const,
-    tags: normalizeTags(essay.frontmatter.tags)
+    tags: normalizeTags(essay.frontmatter.tags),
   }));
-
-  const archives = getAllArchives().map((archive) => ({
-    id: `archive:${archive.slug}`,
-    title: archive.frontmatter.title,
-    description: toExcerpt(archive.content),
-    href: `/archive/${archive.slug}`,
-    kind: "archive" as const,
-    tags: archive.frontmatter.tags ?? []
-  }));
-
-  const zettels = getContent("zettelkasten", zettelSchema).map((zettel) => ({
-    id: `zettel:${zettel.slug}`,
-    title: zettel.frontmatter.title,
-    description: toExcerpt(zettel.content),
-    href: `/zettelkasten/${zettel.slug}`,
-    kind: "zettel" as const,
-    tags: [...(zettel.frontmatter.themes ?? []), ...(zettel.frontmatter.topics ?? [])]
-  }));
-
-  return [...essays, ...archives, ...zettels];
 }

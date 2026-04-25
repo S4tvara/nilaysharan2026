@@ -7,14 +7,10 @@ type FooterLink = {
 
 const exploreLinks: FooterLink[] = [
   { name: "Essays", href: "/essays" },
-  { name: "Zettelkasten", href: "/zettelkasten" },
-  { name: "Archives", href: "/archive" },
-  { name: "Projects", href: "/projects" },
 ];
 
 const navigateLinks: FooterLink[] = [
-  { name: "Links", href: "/links" },
-  { name: "About", href: "/about" },
+  { name: "Recommendations", href: "/recommendations" },
   { name: "Home", href: "/" },
 ];
 
@@ -90,6 +86,18 @@ export default function Footer() {
               </p>
               <p className="font-mono text-xs text-zinc-500">
                 Reader: A- / A+ / night shift
+              </p>
+              <Link href="/feed.xml" className={linkClassName}>
+                <span className={motionClassName}>
+                  <span className="text-zinc-600 transition-colors duration-200 group-hover:text-zinc-400 group-focus-visible:text-zinc-300">
+                    -&gt;
+                  </span>
+                  RSS
+                </span>
+              </Link>
+              <p className="text-xs text-zinc-600 leading-relaxed mt-2 max-w-xs">
+                Colophon: IBM Plex Serif body, UnifrakturCook display, Inter UI.
+                Built with Next.js. No analytics, cookies, or newsletter.
               </p>
             </div>
           </section>

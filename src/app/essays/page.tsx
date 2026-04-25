@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllEssays } from "@/lib/essays";
+import { flattenTags } from "@/lib/tags";
 
 type Essay = ReturnType<typeof getAllEssays>[number];
 
@@ -9,7 +10,8 @@ export default function Page() {
   const grouped: Record<string, Essay[]> = {};
 
   essays.forEach((essay) => {
-    const tags = (essay.frontmatter.tags ?? ["general"]) as string[];
+    const raw = flattenTags(essay.frontmatter.tags);
+    const tags = raw.length > 0 ? raw : ["general"];
     tags.forEach((tag) => {
       if (!grouped[tag]) grouped[tag] = [];
       grouped[tag].push(essay);
