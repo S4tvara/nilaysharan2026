@@ -49,9 +49,9 @@ export const books: Book[] = [
     cover: "/covers/samskara.jpg",
   },
   {
-    title: "The King in Yellow",
-    author: "Robert W. Chambers",
-    cover: "/covers/the-king-in-yellow.jpg",
+    title: "Brave New World",
+    author: "Aldous Huxley",
+    cover: "/covers/brave-new-world.jpg",
   },
   {
     title: "The view from the Cheap Seats",
@@ -75,6 +75,11 @@ export const movies: Movie[] = [
     title: "Das Boot",
     year: "1981",
     poster: "/posters/das-boot.jpg",
+  },
+  {
+    title:"Captain Star",
+    year: "1992",
+    poster: "/posters/captain-star.webp",
   },
   {
     title: "Pather Panchali",
@@ -110,11 +115,6 @@ export const movies: Movie[] = [
     title:"Mirror",
     year: "1975",
     poster: "/posters/mirror.jpg",
-  },
-  {
-    title:"Devi",
-    year: "1992",
-    poster: "/posters/devi.jpg",
   },
   {
     title:"Awaara",
