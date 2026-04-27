@@ -9,51 +9,51 @@ tags: [[network]]
 
 **Analyzing 2,000+ domains for security posture, ownership, and threat signals at scale**
 
-When you extract domains from a browser extension, mail server logs, or network traffic, you're left with a massive list of FQDNs and hostnames. But raw domain lists tell you nothing about *risk*—which domains lack email authentication, expose internal infrastructure through misconfigured DNS, or belong to known tracker networks. This post walks through designing and implementing a production-grade domain security analysis tool in Go that normalizes, enriches, and scores thousands of domains using DNS, RDAP, Certificate Transparency, and threat intelligence feeds.[1][2][3][4][5][6][7][8]
+When you extract domains from a browser extension, mail server logs, or network traffic, you're left with a massive list of FQDNs and hostnames. But raw domain lists tell you nothing about _risk_—which domains lack email authentication, expose internal infrastructure through misconfigured DNS, or belong to known tracker networks. This post walks through designing and implementing a production-grade domain security analysis tool in Go that normalizes, enriches, and scores thousands of domains using DNS, RDAP, Certificate Transparency, and threat intelligence feeds.
 
-***
+---
 
 ## Why Go for Domain Security Analysis?
 
-Go excels at network-heavy, concurrent workloads—exactly what you need when querying DNS servers, RDAP endpoints, and passive DNS APIs for thousands of domains. Key advantages include:[9][10]
+Go excels at network-heavy, concurrent workloads—exactly what you need when querying DNS servers, RDAP endpoints, and passive DNS APIs for thousands of domains. Key advantages include:
 
-**Concurrency at scale:** Goroutines and channels let you resolve DNS records, check DNSSEC, test zone transfers, and query RDAP for hundreds of domains simultaneously without complex thread management.[10]
+**Concurrency at scale:** Goroutines and channels let you resolve DNS records, check DNSSEC, test zone transfers, and query RDAP for hundreds of domains simultaneously without complex thread management.
 
-**Rich networking libraries:** The standard library includes `net` for DNS resolution, `net/http` for API calls, and `crypto/tls` for certificate parsing—core primitives for infrastructure mapping and TLS analysis.[10]
+**Rich networking libraries:** The standard library includes `net` for DNS resolution, `net/http` for API calls, and `crypto/tls` for certificate parsing—core primitives for infrastructure mapping and TLS analysis.
 
-**Single-binary deployment:** Compile once and run anywhere, making it ideal for CI/CD pipelines, serverless functions, or containerized security scanners.[11]
+**Single-binary deployment:** Compile once and run anywhere, making it ideal for CI/CD pipelines, serverless functions, or containerized security scanners.
 
-**Security focus:** Memory safety, strong typing, and secure defaults reduce the attack surface of your analysis tooling itself.[11][10]
+**Security focus:** Memory safety, strong typing, and secure defaults reduce the attack surface of your analysis tooling itself.
 
-Real-world projects like `domain_analyzer` demonstrate Go's fitness for DNS security assessment, WHOIS/RDAP lookups, and domain reputation checking at scale.[12][9]
+Real-world projects like `domain_analyzer` demonstrate Go's fitness for DNS security assessment, WHOIS/RDAP lookups, and domain reputation checking at scale.
 
-***
+---
 
 ## Architecture Overview
 
 The pipeline follows a staged ETL (Extract, Transform, Load) model:
 
-1. **Normalization:** Convert raw input to lowercase, Punycode, and extract the eTLD+1 (registered domain) using the Public Suffix List to correctly identify organizational boundaries for multi-label TLDs like `.co.uk`.[8][13]
+1. **Normalization:** Convert raw input to lowercase, Punycode, and extract the eTLD+1 (registered domain) using the Public Suffix List to correctly identify organizational boundaries for multi-label TLDs like `.co.uk`.
 
-2. **DNS & Infrastructure Enrichment:** Resolve A/AAAA/NS/MX records, map IPs to ASN and hosting provider, and pull passive DNS history to discover related infrastructure and pivots.[4][7][1]
+2. **DNS & Infrastructure Enrichment:** Resolve A/AAAA/NS/MX records, map IPs to ASN and hosting provider, and pull passive DNS history to discover related infrastructure and pivots.
 
-3. **Security Posture Checks:** Test for open zone transfers (AXFR), verify DNSSEC deployment, and parse SPF/DKIM/DMARC records to assess anti-spoofing controls.[3][14][1]
+3. **Security Posture Checks:** Test for open zone transfers (AXFR), verify DNSSEC deployment, and parse SPF/DKIM/DMARC records to assess anti-spoofing controls.
 
-4. **Ownership & Lifecycle:** Query RDAP for registrar, status codes, nameservers, and expiration dates to track lock status and renewal risk as RDAP replaces WHOIS for gTLDs.[6][15]
+4. **Ownership & Lifecycle:** Query RDAP for registrar, status codes, nameservers, and expiration dates to track lock status and renewal risk as RDAP replaces WHOIS for gTLDs.
 
-5. **Threat Intelligence & Classification:** Cross-reference domains against tracker lists (Disconnect, EasyList) and passive DNS feeds to label advertising, analytics, and known-bad infrastructure.[2][16]
+5. **Threat Intelligence & Classification:** Cross-reference domains against tracker lists (Disconnect, EasyList) and passive DNS feeds to label advertising, analytics, and known-bad infrastructure.
 
-6. **Lookalike Detection:** Generate and flag IDN homographs and typosquatting variants using Punycode normalization and edit-distance algorithms to surface brand impersonation risks.[17][18]
+6. **Lookalike Detection:** Generate and flag IDN homographs and typosquatting variants using Punycode normalization and edit-distance algorithms to surface brand impersonation risks.
 
-7. **Prioritization & Reporting:** Score domains by missing controls (no DMARC reject, no DNSSEC, open AXFR), aggregate by eTLD+1 and ASN, and output CSV or JSON for dashboards and remediation tracking.[14][1][3]
+7. **Prioritization & Reporting:** Score domains by missing controls (no DMARC reject, no DNSSEC, open AXFR), aggregate by eTLD+1 and ASN, and output CSV or JSON for dashboards and remediation tracking.
 
-***
+---
 
 ## Implementation: Key Components
 
 ### 1. Normalization with Public Suffix List
 
-The Public Suffix List defines where organizations can register domains, handling edge cases like `.co.uk` and `.com.au` that naive splitting would misparse. Use the `publicsuffix` Go package:[19][8]
+The Public Suffix List defines where organizations can register domains, handling edge cases like `.co.uk` and `.com.au` that naive splitting would misparse. Use the `publicsuffix` Go package:
 
 ```go
 import "golang.org/x/net/publicsuffix"
@@ -69,7 +69,7 @@ func normalizeAndExtract(fqdn string) (punycode, etldPlusOne string, err error) 
 }
 ```
 
-This converts Unicode domains to Punycode (preventing IDN homograph attacks from slipping through deduplication) and correctly extracts the registered domain for ownership grouping.[13][17]
+This converts Unicode domains to Punycode (preventing IDN homograph attacks from slipping through deduplication) and correctly extracts the registered domain for ownership grouping.
 
 ### 2. Concurrent DNS Resolution
 
@@ -80,26 +80,26 @@ func resolveDNS(domains []string) []DNSResult {
     results := make(chan DNSResult, len(domains))
     var wg sync.WaitGroup
     sem := make(chan struct{}, 100) // limit concurrency
-    
+
     for _, domain := range domains {
         wg.Add(1)
         go func(d string) {
             defer wg.Done()
             sem <- struct{}{}
             defer func() { <-sem }()
-            
+
             ips, _ := net.LookupIP(d)
             mx, _ := net.LookupMX(d)
             ns, _ := net.LookupNS(d)
             results <- DNSResult{Domain: d, IPs: ips, MX: mx, NS: ns}
         }(domain)
     }
-    
+
     go func() {
         wg.Wait()
         close(results)
     }()
-    
+
     var out []DNSResult
     for r := range results {
         out = append(out, r)
@@ -108,11 +108,11 @@ func resolveDNS(domains []string) []DNSResult {
 }
 ```
 
-Go's goroutines and channels make this trivial to parallelize while respecting rate limits via a semaphore.[10]
+Go's goroutines and channels make this trivial to parallelize while respecting rate limits via a semaphore.
 
 ### 3. AXFR Zone Transfer Testing
 
-Open AXFR is a high-severity misconfiguration that leaks complete zone files. Test each authoritative nameserver:[20][3]
+Open AXFR is a high-severity misconfiguration that leaks complete zone files. Test each authoritative nameserver:
 
 ```go
 import "github.com/miekg/dns"
@@ -120,13 +120,13 @@ import "github.com/miekg/dns"
 func testAXFR(domain, nameserver string) (bool, error) {
     m := new(dns.Msg)
     m.SetAxfr(domain)
-    
+
     t := new(dns.Transfer)
     c, err := t.In(m, nameserver+":53")
     if err != nil {
         return false, err
     }
-    
+
     for envelope := range c {
         if envelope.Error != nil {
             return false, envelope.Error
@@ -137,7 +137,7 @@ func testAXFR(domain, nameserver string) (bool, error) {
 }
 ```
 
-Flag any domain where AXFR succeeds from an unauthorized source for immediate remediation.[21][3]
+Flag any domain where AXFR succeeds from an unauthorized source for immediate remediation.
 
 ### 4. DMARC and DNSSEC Checks
 
@@ -171,11 +171,11 @@ func checkDNSSEC(domain string) bool {
 }
 ```
 
-Domains without DMARC reject or DNSSEC are scored higher risk for spoofing and cache poisoning.[1][14]
+Domains without DMARC reject or DNSSEC are scored higher risk for spoofing and cache poisoning.
 
 ### 5. IP to ASN Mapping
 
-Map resolved IPs to BGP ASN using Team Cymru's IP→ASN service or a local GeoIP database :[7][22]
+Map resolved IPs to BGP ASN using Team Cymru's IP→ASN service or a local GeoIP database :
 
 ```go
 func ipToASN(ip string) (asn int, org string, err error) {
@@ -186,11 +186,11 @@ func ipToASN(ip string) (asn int, org string, err error) {
 }
 ```
 
-Clustering domains by ASN reveals hosting concentration and shared infrastructure for pivot analysis.[7]
+Clustering domains by ASN reveals hosting concentration and shared infrastructure for pivot analysis.
 
 ### 6. RDAP Queries
 
-RDAP is replacing WHOIS for domain ownership and lifecycle data :[15][6]
+RDAP is replacing WHOIS for domain ownership and lifecycle data :
 
 ```go
 import "github.com/openrdap/rdap"
@@ -201,11 +201,11 @@ func queryRDAP(domain string) (*rdap.Domain, error) {
 }
 ```
 
-Extract registrar, creation/expiration dates, EPP status codes (clientTransferProhibited, serverHold), and nameservers for governance and renewal risk tracking.[23][6]
+Extract registrar, creation/expiration dates, EPP status codes (clientTransferProhibited, serverHold), and nameservers for governance and renewal risk tracking.
 
 ### 7. Tracker List Classification
 
-Cross-reference domains against the Disconnect tracking protection lists to label advertising, analytics, and social widgets :[2]
+Cross-reference domains against the Disconnect tracking protection lists to label advertising, analytics, and social widgets :
 
 ```go
 func classifyTracker(domain string, trackerDB map[string]string) string {
@@ -216,11 +216,11 @@ func classifyTracker(domain string, trackerDB map[string]string) string {
 }
 ```
 
-These lists power Firefox Enhanced Tracking Protection and provide a privacy risk signal for third-party domains.[24][2]
+These lists power Firefox Enhanced Tracking Protection and provide a privacy risk signal for third-party domains.
 
 ### 8. IDN Homograph Detection
 
-Generate confusable variants using Unicode normalization and edit distance to flag potential phishing domains :[18][17]
+Generate confusable variants using Unicode normalization and edit distance to flag potential phishing domains :
 
 ```go
 func detectHomographs(domain string, knownDomains []string) []string {
@@ -235,9 +235,9 @@ func detectHomographs(domain string, knownDomains []string) []string {
 }
 ```
 
-Punycode normalization ensures Unicode lookalikes are caught before visual inspection.[25][17]
+Punycode normalization ensures Unicode lookalikes are caught before visual inspection.
 
-***
+---
 
 ## Scoring and Prioritization
 
@@ -262,9 +262,9 @@ func scoreDomain(result AnalysisResult) int {
 }
 ```
 
-Aggregate scores by eTLD+1 and ASN to identify systemic gaps and concentration risk.[8][7]
+Aggregate scores by eTLD+1 and ASN to identify systemic gaps and concentration risk.
 
-***
+---
 
 ## Output and Reporting
 
@@ -290,41 +290,40 @@ Roll up metrics by eTLD+1, provider, and policy state to track remediation progr
 
 ## Performance and Scale
 
-**Concurrency tuning:** Limit goroutines with a semaphore (e.g., 100–500 workers) to avoid overwhelming DNS resolvers or hitting API rate limits.[10]
+**Concurrency tuning:** Limit goroutines with a semaphore (e.g., 100–500 workers) to avoid overwhelming DNS resolvers or hitting API rate limits.
 
-**Caching:** Cache PSL, tracker lists, and ASN databases in memory to avoid repeated fetches and speed up classification.[2][8][7]
+**Caching:** Cache PSL, tracker lists, and ASN databases in memory to avoid repeated fetches and speed up classification.
 
-**Batch processing:** Split large domain lists into chunks and process incrementally, checkpointing progress to recover from failures.[10]
+**Batch processing:** Split large domain lists into chunks and process incrementally, checkpointing progress to recover from failures.
 
-**External services:** Use passive DNS APIs, CT log APIs, and RDAP bootstrap services for discovery and enrichment; respect rate limits and authentication.[5][4][6]
+**External services:** Use passive DNS APIs, CT log APIs, and RDAP bootstrap services for discovery and enrichment; respect rate limits and authentication.
 
-Testing with 2,255 domains (your Ghostery extension example) should complete in under 5 minutes on a modern machine with proper concurrency tuning.[10]
+Testing with 2,255 domains (your Ghostery extension example) should complete in under 5 minutes on a modern machine with proper concurrency tuning.
 
 ---
 
 ## Security Considerations
 
-**Input validation:** Sanitize domain names to prevent injection attacks in DNS queries or shell commands if calling external tools.[11][10]
+**Input validation:** Sanitize domain names to prevent injection attacks in DNS queries or shell commands if calling external tools.
 
-**TLS verification:** Always verify certificates when querying HTTPS APIs to avoid MITM attacks on enrichment data.[26][10]
+**TLS verification:** Always verify certificates when querying HTTPS APIs to avoid MITM attacks on enrichment data.
 
-**Sensitive data:** RDAP and WHOIS may contain PII; handle registrant data according to GDPR and retention policies.[6][23]
+**Sensitive data:** RDAP and WHOIS may contain PII; handle registrant data according to GDPR and retention policies.
 
-**Rate limiting:** Respect DNS server and API rate limits to avoid blacklisting and ensure ethical reconnaissance.[16][4]
+**Rate limiting:** Respect DNS server and API rate limits to avoid blacklisting and ensure ethical reconnaissance.
 
-***
+---
 
 ## Next Steps
 
 **Passive DNS integration:** Add feeds from SecurityTrails, Farsight, or VirusTotal for historical resolution data and co-hosted domain discovery.[27][4][16]
 
-**Certificate Transparency monitoring:** Poll CT logs for newly issued certificates to discover shadow infrastructure and subdomain sprawl.[28][5]
+**Certificate Transparency monitoring:** Poll CT logs for newly issued certificates to discover shadow infrastructure and subdomain sprawl.
 
-**Threat feed enrichment:** Cross-reference domains against abuse.ch, PhishTank, and commercial threat intelligence for known-bad labeling.[16]
+**Threat feed enrichment:** Cross-reference domains against abuse.ch, PhishTank, and commercial threat intelligence for known-bad labeling.
 
-**Dashboard and alerting:** Stream results to Elasticsearch, Splunk, or Grafana for real-time posture tracking and anomaly detection.[29][30]
+**Dashboard and alerting:** Stream results to Elasticsearch, Splunk, or Grafana for real-time posture tracking and anomaly detection.
 
-**CI/CD integration:** Run the scanner nightly against your asset inventory and alert on new high-risk findings or policy violations.[11][10]
+**CI/CD integration:** Run the scanner nightly against your asset inventory and alert on new high-risk findings or policy violations.
 
-***
-
+---
