@@ -89,8 +89,9 @@ The woman was already walking several paces ahead of me. She looked familiar. No
 "You spent whole summers under that apple tree," she said.
 
 Her voice drifted effortlessly through the hallway, and the humming behind the doors quieted.
+"You thought the beginning of a story was the same thing as its destination."
 
-"You thought the beginning of a story was the same thing as its destination." I tried to answer, but my throat felt dry, coated in the dust of the hallway.
+I tried to answer, but my throat felt dry, coated in the dust of the hallway.
 
 A door somewhere to my left clicked open. I caught a sudden burst of distant laughter, but when I turned, the frame was solid wood again.
 
